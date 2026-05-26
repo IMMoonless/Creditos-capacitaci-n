@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuko Capital LLC — Capacitación Créditos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Barlow:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--surface:#141414;--surface2:#1c1c1c;--surface3:#242424;
+  --border:#2a2a2a;--border2:#333;--red:#c41230;--red-hover:#e0152f;
+  --red-dim:rgba(196,18,48,0.12);--text:#f0f0f0;--muted:#888;--muted2:#555;
+  --success:#22c55e;--warning:#f59e0b;
+  --font:'DM Sans',sans-serif;--font-head:'Barlow',sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font);cursor:pointer;border:none;outline:none}
+input{font-family:var(--font);outline:none}
+.screen{display:none;width:100%;min-height:100vh}
+.screen.active{display:flex}
+
+/* LOGIN */
+#screen-login{align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
+#screen-login::before{content:'';position:absolute;top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(196,18,48,0.07) 0%,transparent 70%);pointer-events:none}
+#screen-login::after{content:'';position:absolute;bottom:-20%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(196,18,48,0.05) 0%,transparent 70%);pointer-events:none}
+.login-card{width:420px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:48px;position:relative;z-index:1}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.login-logo img{width:40px;height:40px;object-fit:contain;border-radius:2px;filter:brightness(1.1)}
+.login-logo-text{font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:0.04em}
+.login-logo-sub{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:1px}
+.login-title{font-family:var(--font-head);font-size:28px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.login-subtitle{font-size:13px;color:var(--muted);margin-bottom:32px}
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.form-input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:11px 14px;color:var(--text);font-size:14px;transition:border-color .2s}
+.form-input:focus{border-color:var(--red)}
+.form-input::placeholder{color:var(--muted2)}
+.btn-primary{width:100%;background:var(--red);color:#fff;font-family:var(--font-head);font-size:15px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:13px;border-radius:3px;transition:background .2s;margin-top:8px}
+.btn-primary:hover{background:var(--red-hover)}
+.login-error{color:var(--red);font-size:13px;margin-top:12px;display:none}
+.login-hint{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted2);line-height:1.8}
+.login-hint strong{color:var(--muted)}
+
+/* SETUP */
+#screen-setup{align-items:center;justify-content:center;background:var(--bg)}
+.setup-card{width:420px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:48px}
+.setup-icon{width:48px;height:48px;background:var(--red-dim);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.setup-icon svg{width:24px;height:24px;stroke:var(--red);fill:none;stroke-width:1.8}
+.setup-title{font-family:var(--font-head);font-size:26px;font-weight:800;margin-bottom:8px}
+.setup-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.5}
+
+/* APP */
+#screen-app{flex-direction:row}
+.sidebar{width:240px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-header{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.sidebar-logo{display:flex;align-items:center;gap:10px}
+.sidebar-logo img{width:32px;height:32px;object-fit:contain;border-radius:2px}
+.sidebar-logo-name{font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.03em;line-height:1.2}
+.sidebar-logo-tag{font-size:10px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
+.sidebar-user{padding:16px 20px;border-bottom:1px solid var(--border)}
+.user-badge{display:flex;align-items:center;gap:10px}
+.user-avatar{width:32px;height:32px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600}
+.user-role{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.sidebar-nav{padding:12px 0;flex:1}
+.nav-section-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);padding:10px 20px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--text);background:var(--red-dim);border-left-color:var(--red)}
+.nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.btn-logout{width:100%;display:flex;align-items:center;gap:8px;background:none;color:var(--muted);font-size:12px;font-weight:500;padding:8px 0;transition:color .15s}
+.btn-logout:hover{color:var(--red)}
+.btn-logout svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+/* MAIN */
+.main{flex:1;min-height:100vh;overflow-y:auto;background:var(--bg)}
+.page{display:none;padding:36px 40px;max-width:960px}
+.page.active{display:block}
+.page-header{margin-bottom:32px}
+.page-title{font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:6px;letter-spacing:-0.01em}
+.page-sub{font-size:14px;color:var(--muted)}
+.section-title{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:20px}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-value{font-family:var(--font-head);font-size:30px;font-weight:800}
+.stat-value span{font-size:14px;font-weight:500;color:var(--muted);margin-left:2px}
+.stat-bar{height:3px;background:var(--surface3);border-radius:2px;margin-top:10px;overflow:hidden}
+.stat-bar-fill{height:100%;background:var(--red);border-radius:2px;transition:width .6s ease}
+.modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:20px;cursor:pointer;transition:border-color .2s,transform .15s}
+.module-card:hover{border-color:var(--red);transform:translateY(-1px)}
+.module-card.completed{border-color:rgba(34,197,94,0.3)}
+.module-card.locked{opacity:.5;cursor:not-allowed}
+.module-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.module-num{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--red);text-transform:uppercase}
+.module-status-badge{font-size:10px;font-weight:600;letter-spacing:0.05em;padding:3px 8px;border-radius:2px}
+.module-status-badge.done{background:rgba(34,197,94,0.12);color:#22c55e}
+.module-status-badge.pending{background:var(--surface3);color:var(--muted)}
+.module-status-badge.locked{background:var(--surface3);color:var(--muted2)}
+.module-title{font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.module-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.module-meta{display:flex;align-items:center;gap:14px}
+.module-meta-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted2)}
+.module-meta-item svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8}
+.module-score{font-size:11px;font-weight:600;color:var(--success)}
+
+/* CONTENT */
+.module-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:24px;transition:color .15s}
+.module-back:hover{color:var(--text)}
+.module-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.module-hero{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:28px 32px;margin-bottom:24px}
+.module-hero-num{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px}
+.module-hero-title{font-family:var(--font-head);font-size:28px;font-weight:800;margin-bottom:10px;line-height:1.2}
+.module-hero-meta{display:flex;gap:20px}
+.module-hero-meta span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.module-hero-meta svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+.content-body{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:32px;margin-bottom:24px;line-height:1.75}
+.content-body h2{font-family:var(--font-head);font-size:20px;font-weight:700;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.content-body h2:first-child{margin-top:0}
+.content-body h3{font-family:var(--font-head);font-size:16px;font-weight:700;margin:20px 0 10px}
+.content-body p{font-size:14px;color:#ccc;margin-bottom:12px}
+.content-body ul,.content-body ol{padding-left:20px;margin-bottom:12px}
+.content-body li{font-size:14px;color:#ccc;margin-bottom:5px}
+.content-body strong{color:var(--text);font-weight:600}
+.content-body code{background:var(--surface3);color:var(--red);padding:2px 7px;border-radius:3px;font-size:13px;font-family:monospace}
+.route-box{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 3px 3px 0;padding:12px 16px;margin:12px 0;font-size:13px;color:#ddd}
+.note-box{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:3px;padding:14px 16px;margin:14px 0}
+.note-box-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warning);margin-bottom:6px}
+.note-box p{color:#ddd;font-size:13px;margin:0}
+.info-box{background:var(--red-dim);border:1px solid rgba(196,18,48,0.2);border-radius:3px;padding:14px 16px;margin:14px 0}
+.info-box p{color:#ddd;font-size:13px;margin:0}
+.step-list{counter-reset:steps;list-style:none;padding:0;margin-bottom:16px}
+.step-list li{counter-increment:steps;display:flex;gap:14px;margin-bottom:12px;font-size:14px;color:#ccc}
+.step-list li::before{content:counter(steps);min-width:24px;height:24px;background:var(--red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.platform-item{background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:12px;text-align:center}
+.platform-item .p-name{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.platform-item .p-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.btn-start-quiz{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 24px;border-radius:3px;transition:background .2s;cursor:pointer}
+.btn-start-quiz:hover{background:var(--red-hover)}
+.btn-start-quiz svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* QUIZ */
+.quiz-progress{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.quiz-progress-text{font-size:13px;color:var(--muted)}
+.quiz-progress-bar{flex:1;height:3px;background:var(--surface3);border-radius:2px;margin:0 16px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--red);border-radius:2px;transition:width .4s ease}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:32px;margin-bottom:20px}
+.quiz-q-num{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+.quiz-q-text{font-family:var(--font-head);font-size:20px;font-weight:700;margin-bottom:24px;line-height:1.4}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{display:flex;align-items:flex-start;gap:12px;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:14px 16px;cursor:pointer;transition:all .15s}
+.quiz-option:hover{border-color:var(--red);background:var(--red-dim)}
+.quiz-option.selected{border-color:var(--red);background:var(--red-dim)}
+.quiz-option.correct{border-color:var(--success);background:rgba(34,197,94,0.08)!important}
+.quiz-option.wrong{border-color:#ef4444;background:rgba(239,68,68,0.08)!important}
+.quiz-option-letter{min-width:24px;height:24px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s}
+.quiz-option.selected .quiz-option-letter{background:var(--red);border-color:var(--red);color:#fff}
+.quiz-option.correct .quiz-option-letter{background:var(--success);border-color:var(--success);color:#fff}
+.quiz-option.wrong .quiz-option-letter{background:#ef4444;border-color:#ef4444;color:#fff}
+.quiz-option-text{font-size:13px;color:#ccc;line-height:1.5;padding-top:2px}
+.quiz-nav{display:flex;justify-content:flex-end}
+.btn-quiz-next{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:10px 20px;border-radius:3px;transition:background .2s;opacity:.4;pointer-events:none}
+.btn-quiz-next.enabled{opacity:1;pointer-events:all;cursor:pointer}
+.btn-quiz-next.enabled:hover{background:var(--red-hover)}
+.btn-quiz-next svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* RESULT */
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:40px;text-align:center}
+.result-score{font-family:var(--font-head);font-size:72px;font-weight:800;line-height:1}
+.result-score-label{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:20px}
+.result-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:2px;font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px}
+.result-badge.pass{background:rgba(34,197,94,0.12);color:var(--success)}
+.result-badge.fail{background:rgba(239,68,68,0.1);color:#ef4444}
+.result-text{font-size:14px;color:var(--muted);max-width:360px;margin:0 auto 28px;line-height:1.6}
+.result-actions{display:flex;justify-content:center;gap:12px}
+.btn-action{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:10px 20px;border-radius:3px;transition:all .2s;cursor:pointer}
+.btn-action.primary{background:var(--red);color:#fff}
+.btn-action.primary:hover{background:var(--red-hover)}
+.btn-action.secondary{background:var(--surface2);color:var(--muted);border:1px solid var(--border2)}
+.btn-action.secondary:hover{color:var(--text);border-color:var(--border)}
+
+/* CERT */
+.cert-preview{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:28px;margin-bottom:24px;display:inline-block;width:100%}
+#cert-canvas{max-width:100%;border-radius:3px;display:block;margin:0 auto}
+.cert-actions{display:flex;justify-content:center;gap:12px}
+
+/* ADMIN */
+.admin-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:16px}
+.admin-user-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.admin-user-avatar{width:44px;height:44px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:17px;font-weight:700;color:#fff}
+.admin-user-name{font-family:var(--font-head);font-size:18px;font-weight:700}
+.admin-user-role{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.progress-table{width:100%;border-collapse:collapse}
+.progress-table th{text-align:left;font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border)}
+.progress-table td{padding:10px 12px;font-size:13px;color:#ccc;border-bottom:1px solid var(--border)}
+.progress-table tr:last-child td{border-bottom:none}
+.td-module{font-weight:500;color:var(--text)}
+.td-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:0.05em}
+.td-status.done{color:var(--success)}
+.td-status.pending{color:var(--muted)}
+.td-score{font-family:var(--font-head);font-size:15px;font-weight:700}
+.td-score.high{color:var(--success)}
+.td-score.mid{color:var(--warning)}
+.td-score.low{color:#ef4444}
+.overall-progress{display:flex;align-items:center;gap:16px;padding:16px;background:var(--surface2);border-radius:3px;margin-top:16px}
+.overall-label{font-size:13px;color:var(--muted);white-space:nowrap}
+.overall-bar{flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.overall-fill{height:100%;background:var(--red);border-radius:3px;transition:width .6s}
+.overall-pct{font-family:var(--font-head);font-size:16px;font-weight:800;white-space:nowrap}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzohfQNnkQvUtMKopuDtd38J1Jg8DYTbG4aw&s" alt="Nuko Capital">
+      <div>
+        <div class="login-logo-text">NUKO CAPITAL LLC</div>
+        <div class="login-logo-sub">Capacitación — Créditos</div>
+      </div>
+    </div>
+    <div class="login-title">Bienvenido</div>
+    <div class="login-subtitle">Área de Créditos — Factoring & Transportation</div>
+    <div class="form-group">
+      <label class="form-label">Usuario</label>
+      <input type="text" id="login-user" class="form-input" placeholder="Ingresa tu usuario">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" id="login-pass" class="form-input" placeholder="Ingresa tu contraseña">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Iniciar Sesión</button>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos</div>
+    <div class="login-hint">
+      <strong>Coordinador:</strong> coordinator / coord123<br>
+      <strong>Analyst Jr:</strong> analyst / analyst123
+    </div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen">
+  <div class="setup-card">
+    <div class="setup-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="setup-title">¡Hola! ¿Cuál es tu nombre?</div>
+    <div class="setup-sub">Tu nombre aparecerá en el certificado de finalización. Ingresa tu nombre completo real.</div>
+    <div class="form-group">
+      <label class="form-label">Nombre completo</label>
+      <input type="text" id="setup-name" class="form-input" placeholder="Ej: Andrés Acosta Sánchez">
+    </div>
+    <button class="btn-primary" onclick="doSetup()">Comenzar capacitación</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzohfQNnkQvUtMKopuDtd38J1Jg8DYTbG4aw&s" alt="Logo">
+        <div>
+          <div class="sidebar-logo-name">NUKO CAPITAL</div>
+          <div class="sidebar-logo-tag">Créditos</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-badge">
+        <div class="user-avatar" id="sb-avatar">A</div>
+        <div>
+          <div class="user-name" id="sb-name">Analyst</div>
+          <div class="user-role" id="sb-role">Analyst Jr</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Principal</div>
+      <div class="nav-item active" onclick="navTo('dashboard')" id="nav-dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="navTo('modules')" id="nav-modules">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Módulos
+      </div>
+      <div class="nav-item" id="nav-certificate" onclick="navTo('certificate')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        Certificado
+      </div>
+      <div class="nav-item" id="nav-admin" style="display:none" onclick="navTo('admin')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Panel Coordinador
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title" id="dash-greeting">Bienvenido</div>
+        <div class="page-sub">Departamento de Créditos — Nu-ko Capital LLC</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Módulos completados</div>
+          <div class="stat-value" id="stat-completed">0<span>/ 5</span></div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="stat-bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Promedio evaluaciones</div>
+          <div class="stat-value" id="stat-avg">—<span>%</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Estado</div>
+          <div class="stat-value" id="stat-status" style="font-size:18px;padding-top:4px">En progreso</div>
+        </div>
+      </div>
+      <div class="section-title">Módulos de capacitación</div>
+      <div class="modules-grid" id="dash-modules"></div>
+    </div>
+
+    <div class="page" id="page-modules">
+      <div class="page-header">
+        <div class="page-title">Módulos</div>
+        <div class="page-sub">Completa cada módulo en orden y aprueba las evaluaciones con mínimo 80%</div>
+      </div>
+      <div class="modules-grid" id="list-modules"></div>
+    </div>
+
+    <div class="page" id="page-module">
+      <div class="module-back" onclick="navTo('modules')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver a módulos
+      </div>
+      <div id="module-content-area"></div>
+    </div>
+
+    <div class="page" id="page-quiz">
+      <div class="module-back" onclick="navTo('module')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver al módulo
+      </div>
+      <div class="page-header">
+        <div class="page-title" id="quiz-title">Evaluación</div>
+        <div class="page-sub">Responde correctamente al menos el 80% para aprobar</div>
+      </div>
+      <div id="quiz-area"></div>
+    </div>
+
+    <div class="page" id="page-certificate">
+      <div class="page-header">
+        <div class="page-title">Certificado</div>
+        <div class="page-sub">Completa todos los módulos para obtener tu certificado</div>
+      </div>
+      <div id="cert-area"></div>
+    </div>
+
+    <div class="page" id="page-admin">
+      <div class="page-header">
+        <div class="page-title">Panel Coordinador</div>
+        <div class="page-sub">Seguimiento del progreso de capacitación en Créditos</div>
+      </div>
+      <div id="admin-area"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const USERS = {
+  coordinator: { password: 'coord123', role: 'admin', displayRole: 'Coordinador Crédito' },
+  analyst: { password: 'analyst123', role: 'student', displayRole: 'Analyst Jr' }
+};
+
+const MODULES = [
+  {
+    id: 'm1', num: 'Módulo 01',
+    title: 'Introducción al Área de Créditos',
+    desc: 'Rol estratégico del área, responsables, alcance e interacción con otros departamentos.',
+    duration: '20 min', topics: 4,
+    content: `
+      <h2>Introducción</h2>
+      <p>El área de Créditos es un pilar clave dentro del Departamento Financiero de Nu-ko Capital LLC. Su función principal es evaluar, aprobar o negar solicitudes de crédito para los actores del proceso de factoring: <strong>carriers, brokers y shippers</strong> del mercado de transporte en USA.</p>
+
+      <h2>1. Objetivo General</h2>
+      <p>Posicionar el área de Créditos dentro del Departamento Financiero de Nu-ko Capital, destacando su rol como entidad financiera especializada. Esto incluye:</p>
+      <ul>
+        <li>Definir las tareas y funciones del día a día y su impacto en la operación interna</li>
+        <li>Gestionar la afiliación de carriers, shippers y brokers</li>
+        <li>Conceder créditos orientados al bienestar de los clientes</li>
+        <li>Garantizar transparencia, objetividad y agilidad en los procesos</li>
+      </ul>
+
+      <h2>2. Responsables del Área</h2>
+      <ul>
+        <li><strong>Analista de Crédito Jr:</strong> Andrés Alejandro Acosta Sánchez</li>
+        <li><strong>Analista de Crédito Sr:</strong> Yeimy Yuleny Gaviria Gaviria</li>
+        <li><strong>Coordinador Crédito Factoring & Transportation:</strong> Roberto Carlos Morante Delgado</li>
+      </ul>
+
+      <h2>3. Alcance del Proceso</h2>
+      <p>El proceso inicia cuando el área <strong>Comercial</strong> o de <strong>Servicio al Cliente</strong> recibe un contacto directo de una empresa interesada en operar con Nu-ko Capital.</p>
+      <ol class="step-list">
+        <li>El contacto externo (carrier, broker o shipper) expresa interés comercial</li>
+        <li>El área Comercial remite el caso al departamento de <strong>Underwriting</strong> para verificación inicial sin UCC</li>
+        <li>Si la solicitud incluye un <strong>UCC activo</strong>, se escala al departamento financiero (Créditos) para análisis detallado</li>
+        <li>El área de Créditos emite respuesta con aprobación o negación fundamentada</li>
+      </ol>
+
+      <h2>4. Interacción con Otros Departamentos</h2>
+      <ul>
+        <li><strong>Underwriting:</strong> Verificación inicial de datos e información del cliente</li>
+        <li><strong>Comercial:</strong> Gestiona el contacto con el cliente y envía solicitudes formales</li>
+        <li><strong>Check-In:</strong> Envía solicitudes de verificación de crédito durante el proceso de factoring</li>
+        <li><strong>Customer Service:</strong> Solicita créditos para casos especiales a través de Hangouts</li>
+        <li><strong>Dispatch:</strong> Solicita créditos a través del grupo "Solicitud de Créditos Dispatch"</li>
+        <li><strong>Collections:</strong> Colabora en la evaluación de brokers con comportamiento negativo</li>
+        <li><strong>Finanzas:</strong> Aprueba aumentos de crédito y políticas del área</li>
+      </ul>
+
+      <h2>5. Plataformas Clave del Área</h2>
+      <div class="platform-grid">
+        <div class="platform-item"><div class="p-name">FactorView</div><div class="p-desc">Sistema operativo de factoraje</div></div>
+        <div class="platform-item"><div class="p-name">Dotribe</div><div class="p-desc">Credit Check y base de datos de brokers/shippers</div></div>
+        <div class="platform-item"><div class="p-name">SAFER</div><div class="p-desc">Verificación de autorización de operadores</div></div>
+        <div class="platform-item"><div class="p-name">OFAC</div><div class="p-desc">Lista de sanciones internacionales</div></div>
+        <div class="platform-item"><div class="p-name">Experian</div><div class="p-desc">Historial crediticio</div></div>
+        <div class="platform-item"><div class="p-name">Ansonia</div><div class="p-desc">Comportamiento de pagos en el sector</div></div>
+        <div class="platform-item"><div class="p-name">Carrier Software</div><div class="p-desc">Historial y desempeño de carriers</div></div>
+        <div class="platform-item"><div class="p-name">Freight Checkers</div><div class="p-desc">Validación de cargas y transportistas</div></div>
+        <div class="platform-item"><div class="p-name">LoadConnex</div><div class="p-desc">Plataforma de Fuel Cards y pagos</div></div>
+      </div>
+
+      <h2>6. Tiempos de Respuesta</h2>
+      <div class="info-box"><p>🔴 <strong>Carriers con UCC:</strong> Máximo <strong>24 horas hábiles</strong> desde recepción de la solicitud completa. Si se solicita información adicional, el plazo de 24 horas se reinicia.<br><br>
+      🔴 <strong>Brokers y Shippers:</strong> Máximo <strong>3 horas hábiles</strong> dentro de la jornada. Las solicitudes entre 4:00 pm – 5:00 pm se gestionan el siguiente día hábil.</p></div>
+    `
+  },
+  {
+    id: 'm2', num: 'Módulo 02',
+    title: 'Estudio de Crédito — Carriers con UCC',
+    desc: 'Documentación requerida, proceso de análisis y criterios para aprobar o negar crédito a carriers con UCC activo.',
+    duration: '35 min', topics: 5,
+    content: `
+      <h2>Introducción</h2>
+      <p>Un UCC (Uniform Commercial Code) filing es un reporte de deuda que indica que el carrier tiene un préstamo activo con una entidad. Cuando Underwriting detecta un UCC bancario activo, el caso se escala al área de Créditos para análisis.</p>
+
+      <div class="note-box">
+        <div class="note-box-title">⚠ Criterio de escalamiento</div>
+        <p>Solo se escala a Créditos cuando el UCC pertenece a una <strong>entidad bancaria</strong>. Si el UCC pertenece a una <strong>factoring</strong>, el proceso se niega de inmediato sin continuar.</p>
+      </div>
+
+      <h2>1. Información Requerida al Área Comercial</h2>
+      <p>El asesor comercial debe adjuntar toda la siguiente información en el correo de solicitud:</p>
+      <ul>
+        <li><strong>Nombre Legal:</strong> Nombre bajo el que opera la empresa</li>
+        <li><strong>Nombre del Representante Legal</strong></li>
+        <li><strong>UsDOT:</strong> Número del Departamento de Transporte</li>
+        <li><strong>MC Number (MC#):</strong> Permiso de negocio interstate (Motor Carrier number)</li>
+        <li><strong>Tipo de Trailer:</strong> Ayuda a identificar el tipo de negocio y volumen estimado de viajes</li>
+        <li><strong>Motivo de la deuda:</strong> Base para entender el comportamiento del cliente y construir confianza</li>
+        <li><strong>Total de la deuda:</strong> Factor clave para evaluar capacidad de pago y endeudamiento</li>
+        <li><strong>Modalidad de pago:</strong> Tiempo de pago del préstamo (días, quincenas, meses)</li>
+        <li><strong>Listado de Brokers con los que trabaja</strong> (con sus MC#) + Carrier Broker Agreements — <em>Obligatorio</em></li>
+        <li><strong>Volumen de cargas semanal/mensual</strong></li>
+        <li><strong>Valor promedio por carga</strong></li>
+        <li><strong>Estados más recorridos</strong></li>
+      </ul>
+
+      <p><strong>Documentos obligatorios a adjuntar:</strong></p>
+      <ul>
+        <li>Statement del préstamo (acuerdo entre partes, plazos, valores)</li>
+        <li>Extractos bancarios de los últimos 3 meses (cuenta operativa del negocio)</li>
+        <li>Screenshot de los UCC afiliados directamente desde las páginas de estado</li>
+        <li>COI y CDL (si aplica)</li>
+        <li>Imagen de la alerta generada por Underwriting</li>
+      </ul>
+
+      <h2>2. Formato del Correo de Solicitud</h2>
+      <div class="route-box"><strong>Para:</strong> teamunderwriting@nukocapital.com y credit@nukocapital.com<br>
+      <strong>Asunto:</strong> ESTUDIO CRÉDITO / DBA DE LA COMPAÑÍA / NOMBRE DEL CARRIER - MC</div>
+
+      <h2>3. Registro en el Archivo de Solicitudes</h2>
+      <p>Cada solicitud debe registrarse en el archivo oficial con los siguientes campos:</p>
+      <ul>
+        <li>Usuario responsable, nombre del carrier, representante legal, DOT, MC, fecha</li>
+        <li>Validaciones: OFAC, SAFER, Carrier Software, Freight Checkers, Experian</li>
+        <li>Brokers con los que trabaja y si ya tienen crédito con Nu-ko</li>
+        <li>Tipo de trailer, promedio de cargas mensuales, valor carga mensual</li>
+        <li>Razón y fecha del préstamo, validación de extractos bancarios</li>
+        <li>Decisión: aprobación/negación, monto sugerido, comentarios</li>
+      </ul>
+
+      <h2>4. Proceso de Análisis</h2>
+      <h3>Paso 1: Verificación en plataformas</h3>
+      <ol class="step-list">
+        <li>Validar en <strong>SAFER</strong>: verificar que el carrier esté autorizado para operar</li>
+        <li>Validar en <strong>OFAC</strong>: si coincide con la base de sanciones → negación inmediata</li>
+        <li>Validar en <strong>Carrier Software y Freight Checkers</strong>: historial operativo</li>
+        <li>Validar en <strong>Experian</strong>: historial crediticio y puntaje</li>
+      </ol>
+
+      <h3>Paso 2: Análisis de documentación financiera</h3>
+      <ol class="step-list">
+        <li>Verificar que el UCC filing esté activo y sea de entidad bancaria (no factoring)</li>
+        <li>Revisar el statement del préstamo: valor total, plazos, pagos por período</li>
+        <li>Analizar los 3 últimos extractos bancarios: ingresos, débitos, saldo de la cuenta</li>
+        <li>Confrontar el monto de la deuda contra los ingresos bancarios para evaluar capacidad de pago</li>
+      </ol>
+
+      <h3>Paso 3: Evaluación de brokers</h3>
+      <ol class="step-list">
+        <li>Revisar calidad y cantidad de brokers con los que trabaja el carrier</li>
+        <li>Verificar si dichos brokers ya tienen crédito con Nu-ko Capital</li>
+        <li>Para cada broker nuevo, realizar un estudio de crédito aparte</li>
+        <li>Evaluar la rentabilidad y relacionamiento comercial potencial</li>
+      </ol>
+
+      <h2>5. Criterios de Aprobación y Negación</h2>
+      <ul>
+        <li>✓ <strong>Aprobación:</strong> Buena calificación de brokers, extractos bancarios positivos, sin problemas en SAFER ni OFAC, capacidad de pago demostrada</li>
+        <li>✗ <strong>Negación por OFAC:</strong> Carrier en lista de sanciones → negación inmediata, notificar al Asesor y copiar a teamunderwriting@nukocapital.com</li>
+        <li>✗ <strong>Negación por SAFER:</strong> Carrier no autorizado para operar → investigar causa; si no hay respuesta comercial, cerrar el caso</li>
+        <li>⚠ <strong>Condición:</strong> Si hay déficit bancario o sin brokers asignados → solicitar que comience con el sistema de Dispatch para evaluar viabilidad</li>
+      </ul>
+    `
+  },
+  {
+    id: 'm3', num: 'Módulo 03',
+    title: 'Estudio de Crédito — Brokers y Shippers',
+    desc: 'Proceso de verificación, plataformas de consulta, criterios de aprobación y gestión de solicitudes.',
+    duration: '30 min', topics: 5,
+    content: `
+      <h2>Introducción</h2>
+      <p>El estudio de crédito para Brokers y Shippers es diferente al de carriers. Se basa principalmente en plataformas de verificación crediticia y comportamiento de pagos, con análisis tanto cuantitativo como cualitativo.</p>
+      <p>El monto mínimo asignado al aprobar un crédito para Broker/Shipper es <strong>$5,000.00 USD</strong>, ajustable según comportamiento de pago posterior.</p>
+
+      <h2>1. Canales de Solicitud según Área</h2>
+
+      <h3>Área de Check-In:</h3>
+      <div class="route-box"><strong>Para:</strong> Credit@Nukocapital.com<br>
+      <strong>Asunto:</strong> VERIFICACIÓN DE CRÉDITO BROKER – [NOMBRE DEL BROKER/SHIPPER]<br>
+      Adjuntar: Rate del Carrier solicitante</div>
+
+      <h3>Área Comercial (template obligatorio):</h3>
+      <div class="route-box">Nombre de la compañía: | MC: | USDOT: | Correo: | Nombre contacto: | Teléfono: | Dirección:<br>
+      Carrier solicitante: Nombre, USDOT, nombre cliente, teléfono, observaciones</div>
+      <p>⚠ Las solicitudes que no cumplan este formato serán rechazadas automáticamente.</p>
+
+      <h3>Customer Service:</h3>
+      <p>Canal de Hangouts: <strong>"Verificación de Créditos"</strong></p>
+
+      <h3>Dispatch:</h3>
+      <p>Grupo: <strong>"Solicitud de Créditos Dispatch"</strong></p>
+
+      <h2>2. Plataformas de Consulta</h2>
+      <ul>
+        <li><strong>Dotribe (Nu-ko Credit Check):</strong> Puntaje crediticio, historial de pagos y días promedio de pago</li>
+        <li><strong>SAFER:</strong> Confirmación de empresa autorizada y activa para operar</li>
+        <li><strong>OFAC:</strong> Verificación de listas de sanciones internacionales</li>
+        <li><strong>Carrier Software:</strong> Desempeño histórico, cargas, relación con otros brokers</li>
+        <li><strong>Ansonia:</strong> Comportamiento de pagos en el sector del transporte (solo si necesario, tiene costo)</li>
+        <li><strong>Experian:</strong> Historial crediticio general (solo si necesario, tiene costo)</li>
+        <li><strong>AWA Collects:</strong> Información de cobros y deudas en el sector</li>
+      </ul>
+
+      <h2>3. Proceso de Verificación Paso a Paso</h2>
+      <ol class="step-list">
+        <li>Verificar si la compañía ya existe en la base de datos de Nu-ko: si tiene crédito activo, notificar al remitente</li>
+        <li>Si tuvo crédito restringido por mal comportamiento: si pasó más de 1 año → puede re-estudiarse; si es menos de 1 año → negación automática</li>
+        <li>Buscar en <strong>SAFER</strong> para confirmar que sea Broker/Shipper autorizado y activo</li>
+        <li>Buscar en <strong>OFAC</strong>: si coincide → negación inmediata</li>
+        <li>Consultar en <strong>Dotribe (Credit Check)</strong>: revisar puntaje, calificación y días promedio de pago</li>
+        <li>Consultar en <strong>Carrier Software</strong>: historial de cargas, pagos y relaciones</li>
+        <li>Si los datos no son concluyentes → consultar Ansonia y/o Experian (evaluar costo-beneficio)</li>
+        <li>Tomar decisión: aprobar o negar, con fundamentación</li>
+        <li>Si se aprueba: crear registro en <strong>Factorview y Dotribe</strong></li>
+        <li>Registrar todo el proceso en el archivo <em>Solicitud de Crédito para Brokers y Shippers</em></li>
+      </ol>
+
+      <h2>4. Criterios de Decisión</h2>
+      <ul>
+        <li>✓ <strong>Aprobación:</strong> Buena referencia en 2+ plataformas, puntaje positivo, tiempos de pago dentro del rango aceptable</li>
+        <li>✗ <strong>Negación:</strong> Calificación negativa en 2+ plataformas (incluyendo Ansonia), empresa no registrada en plataformas relevantes, historial insuficiente para empresa nueva</li>
+        <li>✗ <strong>Negación automática:</strong> Restricción de menos de 1 año, presencia en OFAC</li>
+      </ul>
+
+      <div class="note-box">
+        <div class="note-box-title">⚠ Casos especiales</div>
+        <p>Cuando la información de plataformas no es concluyente, se puede realizar una <strong>entrevista o test de preguntas</strong> al solicitante para evaluar cualitativamente la confiabilidad del Broker o Shipper.</p>
+      </div>
+
+      <h2>5. Seguimiento y Trazabilidad</h2>
+      <p>Todo el proceso queda documentado en la tabla <strong>"Solicitud de Crédito para Brokers y Shippers"</strong>, accesible para las áreas de Check-In, Customer Service, Comercial, Underwriting y Dispatch. Adicionalmente:</p>
+      <ul>
+        <li>Se realizan <strong>confirmaciones telefónicas</strong> para verificar correo, teléfono y dirección del Broker/Shipper</li>
+        <li>Las vinculaciones en Dotribe y Factorview dejan trazabilidad del proceso</li>
+        <li>El resultado se comunica a todas las áreas involucradas</li>
+      </ul>
+
+      <h2>6. Nota DB-004: Mal Comportamiento de Pago</h2>
+      <div class="info-box">
+        <p>🔴 La nota <strong>DB-004</strong> ("Se retira crédito por mal comportamiento de pago") solo puede ser eliminada por el analista que la registró.<br><br>
+        No se estudiarán solicitudes ni se eliminará la restricción si han pasado <strong>menos de 3 meses</strong> desde la inclusión de la nota DB-004. La reapertura del crédito requiere evaluación conjunta con el Departamento de Collections.</p>
+      </div>
+    `
+  },
+  {
+    id: 'm4', num: 'Módulo 04',
+    title: 'Productos Financieros: Libre Inversión & Fuel Cards',
+    desc: 'Línea de crédito de libre inversión para carriers y gestión de Fuel Cards a través de LoadConnex.',
+    duration: '30 min', topics: 4,
+    content: `
+      <h2>Introducción</h2>
+      <p>Nu-ko Capital ofrece a sus carriers dos productos financieros especializados: la <strong>Línea de Crédito de Libre Inversión</strong> y las <strong>Fuel Cards (LoadConnex)</strong>. Ambos están diseñados para fortalecer la relación comercial y el bienestar financiero del cliente.</p>
+
+      <h2>1. Línea de Crédito de Libre Inversión</h2>
+      <p>Esta línea de crédito está disponible para carriers con capacidad de facturación de cargas y generación de pending. El monto, plazos y cuotas son definidos por el Área de Crédito según:</p>
+      <ul>
+        <li>El origen y causa de la necesidad del crédito</li>
+        <li>La capacidad de endeudamiento basada en volumen de facturación</li>
+        <li>Los statements de los últimos 3 meses</li>
+      </ul>
+
+      <h3>Proceso de solicitud:</h3>
+      <ol class="step-list">
+        <li>Customer Service Specialist envía correo a Créditos con asunto: <code>SOLICITUD PRÉSTAMO - LIBRE INVERSION | Cliente [Nombre]</code></li>
+        <li>El correo debe incluir: características del préstamo aprobado, método de desembolso, monto, plazos, cuotas, términos de pago y penalidades por mora</li>
+        <li>Es obligatorio adjuntar el acuerdo del préstamo firmado por el cliente</li>
+      </ol>
+
+      <h2>2. Fuel Cards — LoadConnex</h2>
+      <p>Al vincularse un nuevo cliente, se le envía una <strong>Fuel Card EFS</strong> como parte del paquete de bienvenida. Mientras llega la tarjeta física, el carrier puede usar una <strong>tarjeta virtual</strong>.</p>
+
+      <h3>Proceso de asignación y envío:</h3>
+      <ol class="step-list">
+        <li>Enviar correo a Yenyfer Kristy (yenyfer.k@finocompany.com) con: nombre empresa, DOT, nombre y correo del propietario, teléfono</li>
+        <li>Una vez confirmado el envío, Yenyfer proporciona el número de seguimiento para compartir con el cliente</li>
+        <li>Registrar el consecutivo en el archivo <strong>"Tarjetas EFS - Nuko Capital LLC"</strong></li>
+      </ol>
+
+      <h3>Modalidades de envío:</h3>
+      <ul>
+        <li>Express con seguimiento: 3-4 días hábiles — $20-$22 USD</li>
+        <li>Regular sin seguimiento: 10-15 días hábiles — $2 USD</li>
+        <li>Certificado con seguimiento: 10-15 días hábiles — $6-$8 USD</li>
+      </ul>
+
+      <h3>Registro del carrier en LoadConnex:</h3>
+      <ol class="step-list">
+        <li>Ingresar a <code>https://loadconnex.com</code> con credenciales</li>
+        <li>En sección "CARRIERS" → "ADD CARRIER BY D.O.T" → completar datos del carrier</li>
+        <li>El carrier recibirá correo para crear contraseña y acceder a la plataforma</li>
+        <li>En "CARDS" → buscar el número de tarjeta enviada → seleccionar carrier asignado</li>
+        <li>Activar "physical card only" cuando el carrier tenga la tarjeta física en su poder</li>
+        <li>Cambiar estado a "ACTIVE" y guardar cambios</li>
+      </ol>
+
+      <div class="note-box">
+        <div class="note-box-title">⚠ Protocolo de seguridad</div>
+        <p>En caso de pérdida, robo o sospecha de uso no autorizado, el cliente debe contactar <strong>inmediatamente a LoadConnex al (888) 451-6888</strong> para desactivar la tarjeta. El cliente es responsable de desactivar tarjetas comprometidas. Las tarjetas son de uso exclusivo y no transferibles.</p>
+      </div>
+
+      <h2>3. Gestión Financiera: Transferencia de Fondos a LoadConnex</h2>
+      <p>El proceso para acreditar saldo en la cuenta de Nu-ko Capital vinculada a LoadConnex:</p>
+      <ol class="step-list">
+        <li>Finanzas determina el valor y días para realizar la transferencia</li>
+        <li>Realizar transferencia bancaria según instrucciones:<br>
+          <strong>Banco:</strong> Wells Fargo | <strong>Empresa:</strong> Load Connex LLC<br>
+          <strong>Cuenta:</strong> 7659013283 | <strong>ABA Wire:</strong> 121000248 | <strong>ABA ACH:</strong> 121042882</li>
+        <li>Enviar copia del recibo a <code>pay@loadconnex.com</code> para acreditación rápida</li>
+        <li>Verificar saldo en <code>loadconnex.com → Payments</code></li>
+      </ol>
+
+      <h2>4. Proceso de Pago a Carriers a través de LoadConnex</h2>
+      <ol class="step-list">
+        <li>Ingresar a <code>https://loadconnex.com</code> con credenciales</li>
+        <li>En "CARRIERS" → buscar el carrier por nombre o DOT</li>
+        <li>En "Payments" → revisar balance disponible</li>
+        <li>Seleccionar "+ POST FUNDS" → completar: fecha, descripción visible para carrier, notas privadas, monto</li>
+        <li>Confirmar con "Post Funds" → los fondos se acreditan en tiempo real</li>
+        <li>El carrier recibe confirmación por correo inmediatamente</li>
+      </ol>
+      <p>Para revertir una transacción: seleccionar "REMOVE FUNDS" → ingresar monto y motivo → confirmar.</p>
+      <div class="info-box"><p>🔴 Costo asociado: <strong>$5.00 USD por transacción</strong> LoadConnex. Este cargo cubre gastos administrativos y operativos.</p></div>
+    `
+  },
+  {
+    id: 'm5', num: 'Módulo 05',
+    title: 'Control de Fraudes, Inactividad y Aumento de Créditos',
+    desc: 'Detección de fraudes, proceso de aumento de límite crediticio, gestión de brokers inactivos y notas DB.',
+    duration: '25 min', topics: 4,
+    content: `
+      <h2>Introducción</h2>
+      <p>El área de Créditos tiene un rol activo en la prevención de fraudes y el monitoreo continuo de clientes activos. Este módulo cubre los procesos de control, aumento de créditos y gestión de inactividad.</p>
+
+      <h2>1. Control de Fraudes</h2>
+      <p>Las actividades clave para prevenir fraudes incluyen:</p>
+      <ul>
+        <li>Evaluación exhaustiva de solicitudes con verificación cruzada de información</li>
+        <li>Consultas en Experian, Ansonia, Dotribe y Factorview</li>
+        <li>Análisis del historial de pagos y capacidad de pago</li>
+        <li>Colaboración con Underwriting y Comercial para validar datos</li>
+        <li>Seguimiento riguroso en aumentos de crédito</li>
+        <li>Revisión de plataformas OFAC, Experian, Ansonia en cada proceso de aumento</li>
+      </ul>
+
+      <h3>Señales de alerta de fraude:</h3>
+      <ul>
+        <li>Inconsistencias entre los datos de SAFER y el COI presentado</li>
+        <li>UCCs que pertenecen a empresas de factoring (no bancarias)</li>
+        <li>Discrepancias en la documentación presentada vs. información de plataformas</li>
+        <li>Actividades sospechosas detectadas en el proceso de aumento de crédito</li>
+        <li>Duplicados o aumentos injustificados en el Gestor de Límites de Crédito</li>
+      </ul>
+
+      <div class="info-box"><p>🔴 Si se detectan discrepancias o actividades sospechosas, se <strong>suspende de inmediato</strong> el proceso y se realiza una investigación detallada.</p></div>
+
+      <h2>2. Proceso de Aumento de Crédito</h2>
+      <ol class="step-list">
+        <li><strong>Detección:</strong> El área de Operaciones informa a Créditos a través de FactorView cuando un cliente supera su límite al intentar facturar</li>
+        <li><strong>Revisión:</strong> El equipo de Créditos analiza la situación en SAFER y COI, verifica facturas no mayores a 45 días y variaciones en las cargas procesadas</li>
+        <li><strong>Validación de A/R:</strong> Se revisa la antigüedad de facturas (más de 45 días) y se consulta con Collections sobre acuerdos vigentes</li>
+        <li><strong>Aprobación:</strong> El Departamento Financiero indica si es posible incrementar. Si el crédito excede <strong>$50,000</strong>, se analiza el volumen operativo del cliente</li>
+      </ol>
+
+      <h3>Restricciones importantes:</h3>
+      <ul>
+        <li><strong>Brokers (DB-002):</strong> Existe una restricción de <strong>60 días</strong> entre aumentos de crédito para Brokers, para mitigar riesgos financieros</li>
+        <li>Si hay inconsistencias entre SAFER y COI: las cargas no se procesan hasta resolver las discrepancias</li>
+        <li>Se puede solicitar documentación adicional para aclarar información</li>
+      </ul>
+
+      <h2>3. Inactividad de Brokers y Shippers</h2>
+      <p>Se implementó un sistema de monitoreo para controlar la actividad de Brokers y Shippers, evitando fraudes, pólizas vencidas y falta de autoridades vigentes. Las bases de datos se mantienen sincronizadas entre <strong>FactorView y Dotribe</strong>.</p>
+
+      <h3>Política de inactividad — 12 meses (Nota DB-008):</h3>
+      <ol class="step-list">
+        <li>Los Brokers sin factorización durante <strong>12 meses</strong> reciben la nota <strong>DB-008</strong> (sin restricción inmediata)</li>
+        <li>El área de Créditos hace seguimiento diario a las <strong>4:00 pm</strong> revisando cargas procesadas con nota DB-008</li>
+        <li>Si el broker cumple condiciones de crédito → se retira la nota DB-008</li>
+        <li>Si tiene crédito activo en Dotribe y FV pero presenta reportes negativos → su estado se actualiza a "Negado"</li>
+      </ol>
+
+      <div class="note-box">
+        <div class="note-box-title">⚠ Excepción DB-008</div>
+        <p>Si el broker tiene nota DB-008, está aprobado en ambas plataformas (Dotribe y FV) y tiene seguro vigente → se puede autorizar el pago de la carga por servicio. En este caso, el broker será restringido en ambas plataformas posterior al pago.</p>
+      </div>
+
+      <h2>4. Resumen de Notas DB Clave</h2>
+      <ul>
+        <li><strong>DB-002:</strong> Restricción de 60 días en aumentos de crédito para Brokers</li>
+        <li><strong>DB-004:</strong> Retiro de crédito por mal comportamiento de pago. Solo quien la registra puede eliminarla. Mínimo 3 meses antes de re-estudiar. Evaluación conjunta con Collections.</li>
+        <li><strong>DB-008:</strong> Inactividad de 12 meses. Seguimiento diario a las 4:00 pm. Puede resolverse si cumple condiciones.</li>
+      </ul>
+
+      <h2>5. Herramientas de Control y Monitoreo</h2>
+      <ul>
+        <li><strong>Gestor de Límites de Crédito:</strong> Plataforma con alertas para detectar duplicados o aumentos injustificados</li>
+        <li><strong>FactorView:</strong> Registro de notas DB, seguimiento de brokers inactivos, validación de cargas</li>
+        <li><strong>Dotribe:</strong> Base de datos de brokers con estado actualizado y sincronizado</li>
+        <li><strong>Experian + Ansonia + OFAC:</strong> Verificación periódica del historial crediticio en procesos de revisión</li>
+        <li><strong>SAFER:</strong> Monitoreo de autorización vigente de operadores</li>
+      </ul>
+    `
+  }
+];
+
+const QUIZZES = [
+  {
+    moduleId: 'm1',
+    questions: [
+      { q: '¿Cuándo se escala una solicitud al área de Créditos (en lugar de solo Underwriting)?', opts: ['Cuando el carrier tiene póliza de seguro vencida','Cuando la solicitud incluye un UCC activo con entidad bancaria','Cuando el carrier tiene más de 10 brokers','Cuando el área Comercial lo considera necesario'], ans: 1 },
+      { q: '¿Cuál es el tiempo máximo de respuesta para una solicitud de verificación de crédito para Brokers/Shippers?', opts: ['24 horas hábiles','3 horas hábiles','1 día hábil','8 horas hábiles'], ans: 1 },
+      { q: '¿Qué plataforma se usa como Credit Check principal para Brokers y Shippers?', opts: ['Experian','SAFER','Dotribe','Ansonia'], ans: 2 },
+      { q: '¿Qué área colabora con Créditos para evaluar brokers con comportamiento negativo en procesos de reapertura?', opts: ['Underwriting','Dispatch','Collections','Customer Service'], ans: 2 },
+      { q: '¿Cuál es el plazo reiniciado cuando se solicita información adicional en un estudio de carrier con UCC?', opts: ['No se reinicia, se cuenta desde la solicitud original','El plazo se reinicia desde que se recibe la nueva información','Se duplica el plazo original','El caso se cierra automáticamente'], ans: 1 }
+    ]
+  },
+  {
+    moduleId: 'm2',
+    questions: [
+      { q: '¿Qué tipo de UCC genera negación automática sin continuar el proceso?', opts: ['UCC con entidad bancaria','UCC con entidad de factoring','UCC con vencimiento mayor a 1 año','UCC con monto superior a $50,000'], ans: 1 },
+      { q: '¿Cuáles son los documentos OBLIGATORIOS a adjuntar en una solicitud de carrier con UCC?', opts: ['Solo los extractos bancarios','Statement del préstamo, extractos 3 meses, screenshot UCC','Solo el screenshot del UCC y el statement','COI, CDL, extractos y listado de brokers'], ans: 1 },
+      { q: '¿Cuál es el formato correcto del asunto del correo de solicitud de crédito carrier con UCC?', opts: ['SOLICITUD UCC / NOMBRE DEL CARRIER / MC#','ESTUDIO CRÉDITO / DBA DE LA COMPAÑÍA / NOMBRE DEL CARRIER - MC','CRÉDITO UCC / CARRIER NAME / DOT','UNDERWRITING / CARRIER / UCC ACTIVO'], ans: 1 },
+      { q: '¿Qué sucede si el resultado en OFAC coincide con la información del carrier?', opts: ['Se solicita documentación adicional','Se otorga un crédito temporal mientras se investiga','Se procede a la negación inmediata del crédito','Se escala al área Comercial para decidir'], ans: 3 },
+      { q: '¿Qué condición se impone si el carrier tiene déficit en sus cuentas bancarias o no tiene brokers asignados?', opts: ['Se niega el crédito definitivamente','Se aprueba un crédito menor de prueba','Se solicita que comience con el sistema de Dispatch para evaluar viabilidad','Se espera 6 meses y se re-estudia'], ans: 2 },
+      { q: '¿Para qué sirven principalmente los extractos bancarios en el estudio de carrier con UCC?', opts: ['Para verificar que el carrier tiene cuenta activa','Para confrontar el monto de la deuda contra ingresos y evaluar capacidad de pago','Solo para verificar que son reales y no falsificados','Para calcular el monto de crédito a otorgar'], ans: 1 }
+    ]
+  },
+  {
+    moduleId: 'm3',
+    questions: [
+      { q: '¿Cuál es el monto mínimo asignado cuando el área de Créditos aprueba crédito para un Broker/Shipper?', opts: ['$1,000.00 USD','$10,000.00 USD','$5,000.00 USD','$2,500.00 USD'], ans: 2 },
+      { q: '¿Qué pasa con una solicitud de Broker que tuvo crédito restringido hace 8 meses por mal comportamiento?', opts: ['Se puede re-estudiar con evaluación especial','Se niega automáticamente sin análisis','Se aprueba con límite reducido','Se escala al Coordinador para decidir'], ans: 1 },
+      { q: 'Si una empresa tiene calificación negativa en Ansonia y en Experian, ¿qué decisión se toma?', opts: ['Se aprueba con límite reducido','Se solicita entrevista al solicitante','El crédito se niega de inmediato','Se espera 30 días y se re-evalúa'], ans: 2 },
+      { q: '¿Cómo envía el área de Check-In una solicitud de verificación de crédito para un Broker?', opts: ['Por Hangouts al canal "Verificación de Créditos"','Por correo a Credit@Nukocapital.com con asunto VERIFICACIÓN DE CRÉDITO BROKER','Por el grupo "Solicitud de Créditos Dispatch"','Directamente en FactorView'], ans: 1 },
+      { q: '¿Cuándo se consultan Ansonia y Experian en el proceso de verificación de Brokers/Shippers?', opts: ['Siempre, en todos los casos','Solo cuando los datos de otras plataformas no son concluyentes, por razones de costo','Solo cuando el broker tiene más de 2 años en el mercado','Nunca, no se usan en el proceso'], ans: 1 }
+    ]
+  },
+  {
+    moduleId: 'm4',
+    questions: [
+      { q: '¿Qué información mínima debe incluir el correo de solicitud de crédito libre inversión?', opts: ['Solo el monto y el nombre del carrier','Características del préstamo, método de desembolso, monto, plazos y penalidades por mora','Solo el contrato firmado por el cliente','El nombre del carrier y los extractos bancarios'], ans: 1 },
+      { q: '¿A qué correo se envía la copia del recibo de transferencia bancaria a LoadConnex?', opts: ['credit@nukocapital.com','yenyfer.k@finocompany.com','pay@loadconnex.com','teamunderwriting@nukocapital.com'], ans: 2 },
+      { q: '¿Cuál es el costo por transacción al pagar a un carrier a través de LoadConnex?', opts: ['$2.00 USD','$10.00 USD','$5.00 USD','Sin costo'], ans: 2 },
+      { q: '¿Qué opción se selecciona en LoadConnex para realizar una transferencia de fondos al carrier?', opts: ['SEND PAYMENT','TRANSFER FUNDS','POST FUNDS','ADD BALANCE'], ans: 2 },
+      { q: '¿Qué debe hacer el cliente si pierde o le roban una Fuel Card?', opts: ['Enviar un correo a créditos@nukocapital.com','Contactar inmediatamente a LoadConnex al (888) 451-6888 para desactivarla','Reportarlo al área Comercial de Nu-ko','Esperar 24 horas y reportarlo a Finanzas'], ans: 1 },
+      { q: '¿Cuándo se activa la opción "physical card only" en LoadConnex?', opts: ['Cuando se crea el carrier en el sistema','Inmediatamente después de enviar la tarjeta','Cuando el carrier tiene la tarjeta física en su poder','Cuando el carrier activa su cuenta en la plataforma'], ans: 3 }
+    ]
+  },
+  {
+    moduleId: 'm5',
+    questions: [
+      { q: '¿Cuántos días de restricción existen entre aumentos de crédito para Brokers (DB-002)?', opts: ['30 días','90 días','45 días','60 días'], ans: 3 },
+      { q: '¿Cuántos meses deben haber pasado como mínimo para re-estudiar un broker con nota DB-004?', opts: ['1 mes','6 meses','3 meses','12 meses'], ans: 2 },
+      { q: 'Si un broker tiene nota DB-008 y está aprobado en Dotribe, FV y con seguro vigente, ¿qué ocurre?', opts: ['Se retira automáticamente la nota DB-008','Se puede autorizar el pago por servicio y luego se restringe en ambas plataformas','Se niega la carga sin excepción','Se escala al Coordinador para análisis especial'], ans: 1 },
+      { q: '¿A qué hora hace el área de Créditos seguimiento diario de cargas con nota DB-008?', opts: ['9:00 am','12:00 pm','4:00 pm','Al inicio y al cierre del día'], ans: 2 },
+      { q: '¿Qué monto de crédito activa un análisis especial del volumen operativo del cliente en el proceso de aumento?', opts: ['$20,000 USD','$50,000 USD','$30,000 USD','$100,000 USD'], ans: 1 },
+      { q: '¿Quién es el único autorizado para eliminar la nota DB-004 de un broker?', opts: ['El Coordinador de Crédito','El Analista Sr. del área','Cualquier analista de Créditos','El analista que la registró'], ans: 3 }
+    ]
+  }
+];
+
+// ─── STATE ───
+let state = {
+  currentUser: null, currentPage: 'dashboard',
+  currentModule: null,
+  currentQuiz: { moduleId: null, qIndex: 0, answers: [], passed: false, lastScore: 0, correct: 0, total: 0 },
+  progress: { completedModules: [], quizScores: {}, completedAt: {} }
+};
+function loadProgress() { const s = localStorage.getItem('nuko_cred_progress'); if (s) state.progress = JSON.parse(s); }
+function saveProgress() { localStorage.setItem('nuko_cred_progress', JSON.stringify(state.progress)); }
+function loadAnalystName() { return localStorage.getItem('nuko_cred_name') || ''; }
+function saveAnalystName(n) { localStorage.setItem('nuko_cred_name', n); }
+
+// ─── AUTH ───
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim().toLowerCase();
+  const p = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-error');
+  if (USERS[u] && USERS[u].password === p) {
+    err.style.display = 'none';
+    state.currentUser = u;
+    loadProgress();
+    if (u === 'analyst' && !loadAnalystName()) { showScreen('setup'); }
+    else { enterApp(); }
+  } else { err.style.display = 'block'; }
+}
+function doSetup() {
+  const name = document.getElementById('setup-name').value.trim();
+  if (!name) return;
+  saveAnalystName(name);
+  enterApp();
+}
+function doLogout() {
+  state.currentUser = null;
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  showScreen('login');
+}
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+function enterApp() {
+  showScreen('app');
+  const user = USERS[state.currentUser];
+  const name = state.currentUser === 'analyst' ? (loadAnalystName() || 'Analyst Jr') : 'Coordinador';
+  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-role').textContent = user.displayRole;
+  if (user.role === 'admin') document.getElementById('nav-admin').style.display = 'flex';
+  navTo('dashboard');
+}
+
+// ─── NAVIGATION ───
+function navTo(page, extra) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  state.currentPage = page;
+  const actions = {
+    dashboard: () => { renderDashboard(); show('dashboard'); activate('nav-dashboard'); },
+    modules: () => { renderModuleList(); show('modules'); activate('nav-modules'); },
+    module: () => { renderModuleDetail(extra || state.currentModule); show('module'); activate('nav-modules'); },
+    quiz: () => { renderQuiz(extra || state.currentModule); show('quiz'); },
+    'quiz-result': () => { renderQuizResult(); show('quiz'); },
+    certificate: () => { renderCertificate(); show('certificate'); activate('nav-certificate'); },
+    admin: () => { renderAdmin(); show('admin'); activate('nav-admin'); }
+  };
+  if (actions[page]) actions[page]();
+}
+function show(id) { document.getElementById('page-' + id).classList.add('active'); }
+function activate(id) { const el = document.getElementById(id); if (el) el.classList.add('active'); }
+
+// ─── DASHBOARD ───
+function renderDashboard() {
+  const name = state.currentUser === 'analyst' ? (loadAnalystName() || 'Analyst') : 'Coordinador';
+  document.getElementById('dash-greeting').textContent = '¡Hola, ' + name + '!';
+  const completed = state.progress.completedModules.length;
+  const pct = Math.round((completed / MODULES.length) * 100);
+  document.getElementById('stat-completed').innerHTML = completed + '<span>/ ' + MODULES.length + '</span>';
+  document.getElementById('stat-bar').style.width = pct + '%';
+  const scores = Object.values(state.progress.quizScores);
+  const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null;
+  document.getElementById('stat-avg').innerHTML = avg !== null ? avg + '<span>%</span>' : '—';
+  const statusEl = document.getElementById('stat-status');
+  if (completed === MODULES.length) { statusEl.textContent = '✓ Completado'; statusEl.style.color = 'var(--success)'; }
+  else { statusEl.textContent = 'En progreso'; statusEl.style.color = 'var(--text)'; }
+  document.getElementById('dash-modules').innerHTML = MODULES.map((m, i) => buildModuleCard(m, i)).join('');
+}
+function buildModuleCard(m, i) {
+  const done = state.progress.completedModules.includes(m.id);
+  const score = state.progress.quizScores[m.id];
+  const locked = i > 0 && !state.progress.completedModules.includes(MODULES[i - 1].id) && !done;
+  const badge = done ? '<span class="module-status-badge done">✓ Completado</span>'
+    : locked ? '<span class="module-status-badge locked">🔒 Bloqueado</span>'
+    : '<span class="module-status-badge pending">Pendiente</span>';
+  const scoreHtml = score !== undefined ? '<span class="module-score">Puntaje: ' + score + '%</span>' : '';
+  return `<div class="module-card ${done ? 'completed' : ''} ${locked ? 'locked' : ''}" onclick="${locked ? '' : "navTo('module','" + m.id + "')"}">
+    <div class="module-card-header"><div class="module-num">${m.num}</div>${badge}</div>
+    <div class="module-title">${m.title}</div>
+    <div class="module-desc">${m.desc}</div>
+    <div class="module-meta">
+      <span class="module-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${m.duration}</span>
+      <span class="module-meta-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${m.topics} temas</span>
+      ${scoreHtml}
+    </div>
+  </div>`;
+}
+function renderModuleList() { document.getElementById('list-modules').innerHTML = MODULES.map((m, i) => buildModuleCard(m, i)).join(''); }
+
+// ─── MODULE DETAIL ───
+function renderModuleDetail(moduleId) {
+  state.currentModule = moduleId;
+  const m = MODULES.find(x => x.id === moduleId);
+  const done = state.progress.completedModules.includes(m.id);
+  const score = state.progress.quizScores[m.id];
+  let quizBtn = done
+    ? `<div style="display:flex;align-items:center;gap:12px">
+        <button class="btn-start-quiz" onclick="navTo('quiz','${m.id}')"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>Repetir evaluación</button>
+        <span style="font-size:13px;color:var(--success)">✓ Completado — ${score}%</span>
+      </div>`
+    : `<button class="btn-start-quiz" onclick="navTo('quiz','${m.id}')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Iniciar evaluación</button>`;
+  document.getElementById('module-content-area').innerHTML = `
+    <div class="module-hero">
+      <div class="module-hero-num">${m.num}</div>
+      <div class="module-hero-title">${m.title}</div>
+      <div class="module-hero-meta">
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${m.duration}</span>
+        <span><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${m.topics} temas</span>
+      </div>
+    </div>
+    <div class="content-body">${m.content}</div>
+    <div style="margin-bottom:40px">${quizBtn}</div>`;
+}
+
+// ─── QUIZ ───
+function renderQuiz(moduleId) {
+  state.currentModule = moduleId;
+  const m = MODULES.find(x => x.id === moduleId);
+  const q = QUIZZES.find(x => x.moduleId === moduleId);
+  state.currentQuiz = { moduleId, qIndex: 0, answers: new Array(q.questions.length).fill(null) };
+  document.getElementById('quiz-title').textContent = 'Evaluación — ' + m.title;
+  renderQuestion();
+}
+function renderQuestion() {
+  const q = QUIZZES.find(x => x.moduleId === state.currentQuiz.moduleId);
+  const total = q.questions.length;
+  const i = state.currentQuiz.qIndex;
+  const question = q.questions[i];
+  const pct = Math.round((i / total) * 100);
+  const letters = ['A', 'B', 'C', 'D'];
+  const sel = state.currentQuiz.answers[i];
+  document.getElementById('quiz-area').innerHTML = `
+    <div>
+      <div class="quiz-progress">
+        <span class="quiz-progress-text">Pregunta ${i + 1} de ${total}</span>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+        <span class="quiz-progress-text">${pct}%</span>
+      </div>
+      <div class="quiz-card">
+        <div class="quiz-q-num">Pregunta ${i + 1}</div>
+        <div class="quiz-q-text">${question.q}</div>
+        <div class="quiz-options">
+          ${question.opts.map((o, oi) => `
+            <div class="quiz-option ${sel === oi ? 'selected' : ''}" onclick="selectOption(${oi})">
+              <div class="quiz-option-letter">${letters[oi]}</div>
+              <div class="quiz-option-text">${o}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-quiz-next ${sel !== null ? 'enabled' : ''}" onclick="nextQuestion()">
+          ${i < total - 1 ? 'Siguiente' : 'Finalizar'}
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+function selectOption(oi) { state.currentQuiz.answers[state.currentQuiz.qIndex] = oi; renderQuestion(); }
+function nextQuestion() {
+  const q = QUIZZES.find(x => x.moduleId === state.currentQuiz.moduleId);
+  const i = state.currentQuiz.qIndex;
+  if (state.currentQuiz.answers[i] === null) return;
+  if (i < q.questions.length - 1) { state.currentQuiz.qIndex++; renderQuestion(); return; }
+  let correct = 0;
+  q.questions.forEach((qn, qi) => { if (state.currentQuiz.answers[qi] === qn.ans) correct++; });
+  const score = Math.round((correct / q.questions.length) * 100);
+  const passed = score >= 80;
+  if (passed) {
+    if (!state.progress.completedModules.includes(state.currentModule)) state.progress.completedModules.push(state.currentModule);
+    state.progress.quizScores[state.currentModule] = score;
+    state.progress.completedAt[state.currentModule] = new Date().toLocaleDateString('es-CO');
+    saveProgress();
+  }
+  state.currentQuiz.lastScore = score; state.currentQuiz.correct = correct;
+  state.currentQuiz.total = q.questions.length; state.currentQuiz.passed = passed;
+  navTo('quiz-result');
+}
+
+// ─── RESULT ───
+function renderQuizResult() {
+  const { lastScore, correct, total, passed } = state.currentQuiz;
+  const allDone = state.progress.completedModules.length === MODULES.length;
+  const msg = passed
+    ? `Superaste la evaluación con ${correct} de ${total} respuestas correctas. ¡Excelente trabajo!`
+    : `Obtuviste ${correct} de ${total} correctas. Necesitas al menos 80% para aprobar. Revisa el módulo e intenta de nuevo.`;
+  let actions = '';
+  if (passed && allDone) {
+    actions = `<button class="btn-action primary" onclick="navTo('certificate')">Ver certificado</button><button class="btn-action secondary" onclick="navTo('modules')">Ver módulos</button>`;
+  } else if (passed) {
+    const mi = MODULES.findIndex(x => x.id === state.currentModule);
+    const next = MODULES[mi + 1];
+    actions = next
+      ? `<button class="btn-action primary" onclick="navTo('module','${next.id}')">Siguiente módulo</button><button class="btn-action secondary" onclick="navTo('modules')">Ver todos</button>`
+      : `<button class="btn-action secondary" onclick="navTo('modules')">Ver módulos</button>`;
+  } else {
+    actions = `<button class="btn-action primary" onclick="navTo('quiz','${state.currentModule}')">Intentar de nuevo</button><button class="btn-action secondary" onclick="navTo('module','${state.currentModule}')">Revisar módulo</button>`;
+  }
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="result-card">
+      <div class="result-score">${lastScore}%</div>
+      <div class="result-score-label">${correct} de ${total} respuestas correctas</div>
+      <div class="result-badge ${passed ? 'pass' : 'fail'}">${passed ? '✓ Aprobado' : '✗ No aprobado'}</div>
+      <div class="result-text">${msg}</div>
+      <div class="result-actions">${actions}</div>
+    </div>`;
+}
+
+// ─── CERTIFICATE ───
+function renderCertificate() {
+  const allDone = state.progress.completedModules.length === MODULES.length;
+  const certArea = document.getElementById('cert-area');
+  if (!allDone) {
+    const rem = MODULES.length - state.progress.completedModules.length;
+    certArea.innerHTML = `<div class="result-card">
+      <div class="result-score" style="font-size:36px">Certificado bloqueado</div>
+      <div class="result-text">Completa todos los módulos y evaluaciones. Te faltan <strong>${rem} módulo(s)</strong>.</div>
+      <div class="result-actions"><button class="btn-action primary" onclick="navTo('modules')">Continuar capacitación</button></div>
+    </div>`; return;
+  }
+  const name = loadAnalystName() || 'Analyst Jr';
+  const today = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+  const scores = Object.values(state.progress.quizScores);
+  const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+  certArea.innerHTML = `
+    <div class="cert-preview"><canvas id="cert-canvas" width="900" height="620"></canvas></div>
+    <div class="cert-actions">
+      <button class="btn-action primary" onclick="downloadCert()">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar certificado
+      </button>
+    </div>`;
+  setTimeout(() => drawCertificate(name, today, avg), 100);
+}
+function drawCertificate(name, date, avg) {
+  const canvas = document.getElementById('cert-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 900, H = 620;
+  ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#c41230'; ctx.lineWidth = 3; ctx.strokeRect(16, 16, W - 32, H - 32);
+  ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1; ctx.strokeRect(26, 26, W - 52, H - 52);
+  ctx.fillStyle = '#c41230'; ctx.fillRect(16, 16, W - 32, 6); ctx.fillRect(16, H - 22, W - 32, 6);
+  [[16,16],[W-16,16],[16,H-16],[W-16,H-16]].forEach(([cx,cy]) => { ctx.beginPath(); ctx.arc(cx,cy,12,0,Math.PI*2); ctx.fillStyle='#c41230'; ctx.fill(); });
+  ctx.font = 'bold 13px Barlow,sans-serif'; ctx.fillStyle = '#c41230'; ctx.textAlign = 'center';
+  ctx.fillText('NUKO CAPITAL LLC — DEPARTAMENTO DE CRÉDITOS', W / 2, 78);
+  ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2-160, 90); ctx.lineTo(W/2+160, 90); ctx.stroke();
+  ctx.font = 'bold 40px Barlow,sans-serif'; ctx.fillStyle = '#f0f0f0';
+  ctx.fillText('CERTIFICADO DE CAPACITACIÓN', W / 2, 148);
+  ctx.font = '14px DM Sans,sans-serif'; ctx.fillStyle = '#888';
+  ctx.fillText('Programa de Formación — Área de Créditos Factoring & Transportation', W / 2, 180);
+  ctx.font = '14px DM Sans,sans-serif'; ctx.fillStyle = '#666'; ctx.fillText('Se certifica que', W / 2, 240);
+  ctx.font = 'bold 46px Barlow,sans-serif'; ctx.fillStyle = '#ffffff'; ctx.fillText(name, W / 2, 302);
+  const nw = ctx.measureText(name).width;
+  ctx.strokeStyle = '#c41230'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W/2-nw/2, 314); ctx.lineTo(W/2+nw/2, 314); ctx.stroke();
+  ctx.font = '15px DM Sans,sans-serif'; ctx.fillStyle = '#aaa';
+  ctx.fillText('ha completado satisfactoriamente el programa de capacitación del', W / 2, 350);
+  ctx.font = 'bold 17px DM Sans,sans-serif'; ctx.fillStyle = '#f0f0f0';
+  ctx.fillText('Área de Créditos — Nu-ko Capital LLC', W / 2, 378);
+  ctx.font = '12px DM Sans,sans-serif'; ctx.fillStyle = '#666'; ctx.fillText('MÓDULOS COMPLETADOS', W / 2, 415);
+  const modNames = ['Intro Créditos','Carriers con UCC','Brokers & Shippers','Prod. Financieros','Control & Fraudes'];
+  modNames.forEach((mn, i) => {
+    const x = 130 + i * 160;
+    ctx.fillStyle = '#1c1c1c'; ctx.fillRect(x-65, 425, 128, 32);
+    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1; ctx.strokeRect(x-65, 425, 128, 32);
+    ctx.font = '10px DM Sans,sans-serif'; ctx.fillStyle = '#888'; ctx.fillText(mn, x, 445);
+  });
+  ctx.font = '12px DM Sans,sans-serif'; ctx.fillStyle = '#555';
+  ctx.fillText('Fecha de emisión: ' + date + '  ·  Promedio obtenido: ' + avg + '%', W / 2, 510);
+  [[220,560,'Liderazgo Financiero'],[680,560,'Coordinación de Crédito']].forEach(([sx,sy,label]) => {
+    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx-60, sy); ctx.lineTo(sx+60, sy); ctx.stroke();
+    ctx.font = '11px DM Sans,sans-serif'; ctx.fillStyle = '#555'; ctx.fillText(label, sx, sy+18);
+  });
+}
+function downloadCert() {
+  const canvas = document.getElementById('cert-canvas');
+  const a = document.createElement('a');
+  a.download = 'certificado-creditos-nuko.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+// ─── ADMIN ───
+function renderAdmin() {
+  const analystName = loadAnalystName() || 'Sin registrar';
+  const completed = state.progress.completedModules.length;
+  const pct = Math.round((completed / MODULES.length) * 100);
+  const rows = MODULES.map(m => {
+    const done = state.progress.completedModules.includes(m.id);
+    const score = state.progress.quizScores[m.id];
+    const sc = score >= 90 ? 'high' : score >= 80 ? 'mid' : score ? 'low' : '';
+    return `<tr>
+      <td class="td-module">${m.num} — ${m.title}</td>
+      <td><span class="td-status ${done ? 'done' : 'pending'}">${done ? '✓ Completado' : '— Pendiente'}</span></td>
+      <td><span class="td-score ${sc}">${score !== undefined ? score + '%' : '—'}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${state.progress.completedAt[m.id] || '—'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('admin-area').innerHTML = `
+    <div class="admin-card">
+      <div class="admin-user-header">
+        <div class="admin-user-avatar">${analystName.charAt(0).toUpperCase()}</div>
+        <div><div class="admin-user-name">${analystName}</div><div class="admin-user-role">Analyst Jr — Créditos</div></div>
+      </div>
+      <table class="progress-table">
+        <thead><tr><th>Módulo</th><th>Estado</th><th>Puntaje</th><th>Fecha</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="overall-progress">
+        <span class="overall-label">Progreso total</span>
+        <div class="overall-bar"><div class="overall-fill" style="width:${pct}%"></div></div>
+        <span class="overall-pct">${pct}%</span>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>
